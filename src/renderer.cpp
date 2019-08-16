@@ -1,4 +1,5 @@
 #include "renderer.h"
+#include "button.h"
 #include <iostream>
 #include <string>
 
@@ -38,7 +39,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(Snake const snake, SDL_Point const &food) {
+void Renderer::Render(Snake const snake, SDL_Point const &food, Button &restart_button) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -70,6 +71,15 @@ void Renderer::Render(Snake const snake, SDL_Point const &food) {
     SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
   }
   SDL_RenderFillRect(sdl_renderer, &block);
+
+  // Render restart button 66CD00
+  if (!snake.alive) {
+    restart_button.setRelativeHeight(screen_height, grid_height);
+    restart_button.setRelativeWidth(screen_width, grid_width);
+    SDL_SetRenderDrawColor(sdl_renderer, 0x66, 0xCD, 0x00, 0xFF);
+    SDL_Rect restartButton = restart_button.createButtonRect();
+    SDL_RenderFillRect(sdl_renderer, &restartButton);
+  }
 
   // Update Screen
   SDL_RenderPresent(sdl_renderer);

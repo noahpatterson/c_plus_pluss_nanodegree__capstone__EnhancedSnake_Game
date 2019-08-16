@@ -1,17 +1,19 @@
 #include "game.h"
 #include <iostream>
 #include "SDL.h"
+#include "button.h"
 
 Game::Game(std::size_t grid_width, std::size_t grid_height)
     : snake(grid_width, grid_height),
       engine(dev()),
       random_w(0, static_cast<int>(grid_width)),
-      random_h(0, static_cast<int>(grid_height)) {
+      random_h(0, static_cast<int>(grid_height)),
+      _grid_height(grid_height),
+      _grid_width(grid_width) {
   PlaceFood();
 }
 
-void Game::Run(Controller const &controller, Renderer &renderer,
-               std::size_t target_frame_duration) {
+void Game::Run(Controller const &controller, Renderer &renderer, std::size_t target_frame_duration) {
   Uint32 title_timestamp = SDL_GetTicks();
   Uint32 frame_start;
   Uint32 frame_end;
@@ -22,10 +24,36 @@ void Game::Run(Controller const &controller, Renderer &renderer,
   while (running) {
     frame_start = SDL_GetTicks();
 
+    //create restart button
+    Button restart_button(0, 0, 2, 2);
+
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake);
+
     Update();
-    renderer.Render(snake, food);
+    renderer.Render(snake, food, restart_button);
+
+    //extract this to method
+    if (!snake.alive) {
+      SDL_PumpEvents();
+      int x, y;
+      if (SDL_GetMouseState(&x, &y)) {
+        bool inside = true;
+        if (x < restart_button._position.x) {
+          inside = false;
+        } else if (x > restart_button._position.x + restart_button._relativeWidth) {
+          inside = false;
+        } else if (y < restart_button._position.y) {
+          inside = false;
+        } else if ( y > restart_button._position.y + restart_button._relativeHeight) {
+          inside = false;
+        }
+
+        if (inside) {
+          RestartGame();
+        }
+      }
+    }
 
     frame_end = SDL_GetTicks();
 
@@ -50,6 +78,11 @@ void Game::Run(Controller const &controller, Renderer &renderer,
   }
 }
 
+void Game::RestartGame() {
+  snake = Snake(_grid_width, _grid_height);
+  snake.alive = true;
+}
+
 void Game::PlaceFood() {
   int x, y;
   while (true) {
@@ -66,7 +99,9 @@ void Game::PlaceFood() {
 }
 
 void Game::Update() {
-  if (!snake.alive) return;
+  if (!snake.alive) {
+    return;
+  };
 
   snake.Update();
 
