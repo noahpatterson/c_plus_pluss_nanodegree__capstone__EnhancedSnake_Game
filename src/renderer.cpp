@@ -3,7 +3,9 @@
 #include <iostream>
 #include <string>
 #include "texture.h"
+#include "obstacle.h"
 #include "SDL2/SDL_ttf.h"
+#include "SDL2/SDL_image.h"
 
 Renderer::Renderer(const std::size_t screen_width,
                    const std::size_t screen_height,
@@ -37,7 +39,6 @@ Renderer::Renderer(const std::size_t screen_width,
 }
 
 Renderer::~Renderer() {
-  // TODO need to close TTF_FONT `TTF_CloseFont( gFont );gFont = NULL;`
   SDL_DestroyWindow(sdl_window);
   TTF_CloseFont(font);
   font = NULL;
@@ -123,6 +124,19 @@ void Renderer::Render(Snake const snake, SDL_Point const &food, Button &restart_
       textTexture.render(buttonPositionX, buttonPositionY);
     }
   }
+
+  //render donut item
+  Obstacle donut(sdl_renderer, Clip::donut);
+
+  //Initialize PNG loading
+  int imgFlags = IMG_INIT_PNG;
+  if(!(IMG_Init(imgFlags) & imgFlags))
+  {
+    printf( "SDL_image could not initialize! SDL_mage Error: %s\n", IMG_GetError() );
+  } else {
+    donut.render(0, 0);
+  }
+
 
   // Update Screen
   SDL_RenderPresent(sdl_renderer);

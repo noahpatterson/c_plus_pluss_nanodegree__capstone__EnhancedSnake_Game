@@ -202,7 +202,12 @@ CMakeFiles/SnakeGame.dir/src/main.cpp.o: /usr/local/Cellar/sdl2/2.0.9_1/include/
 CMakeFiles/SnakeGame.dir/src/main.cpp.o: /usr/local/Cellar/sdl2/2.0.9_1/include/SDL2/begin_code.h
 CMakeFiles/SnakeGame.dir/src/main.cpp.o: /usr/local/Cellar/sdl2/2.0.9_1/include/SDL2/close_code.h
 
+CMakeFiles/SnakeGame.dir/src/obstacle.cpp.o: ../src/obstacle.cpp
+CMakeFiles/SnakeGame.dir/src/obstacle.cpp.o: ../src/obstacle.h
+CMakeFiles/SnakeGame.dir/src/obstacle.cpp.o: ../src/texture.h
+
 CMakeFiles/SnakeGame.dir/src/renderer.cpp.o: ../src/button.h
+CMakeFiles/SnakeGame.dir/src/renderer.cpp.o: ../src/obstacle.h
 CMakeFiles/SnakeGame.dir/src/renderer.cpp.o: ../src/renderer.cpp
 CMakeFiles/SnakeGame.dir/src/renderer.cpp.o: ../src/renderer.h
 CMakeFiles/SnakeGame.dir/src/renderer.cpp.o: ../src/snake.h

@@ -6,6 +6,7 @@
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_ttf.h"
+#include "SDL2/SDL_image.h"
 #include <stdio.h>
 #include <string>
 
@@ -24,9 +25,6 @@ class Texture
         //Deallocates memory
         ~Texture();
 
-        //Loads image at specified path
-        //bool loadFromFile( std::string path );
-
         //Creates image from font string
         bool loadFromRenderedText( std::string textureText, SDL_Color textColor, TTF_Font *font );
 
@@ -34,15 +32,21 @@ class Texture
         void free();
 
         //Renders texture at given point
-        void render( int x, int y );
+        void render( int x, int y);
 
-        //Gets image dimensions
         int getWidth();
         int getHeight();
+        SDL_Texture* getTexture();
+        SDL_Renderer* getSDLRenderer();
+
+        void setWidth(int width);
+        void setHeight(int height);
+        void setTexture(SDL_Texture *t);
+        void setSDLRenderer(SDL_Renderer *sdlr);
 
     private:
         //The actual hardware texture
-        SDL_Texture* _texture;
+        SDL_Texture *_texture;
 
         //Image dimensions
         int _width;

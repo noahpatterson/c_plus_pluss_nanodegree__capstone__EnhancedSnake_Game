@@ -4,6 +4,7 @@
 #include "SDL2/SDL.h"
 #include "texture.h"
 #include "SDL2/SDL_ttf.h"
+// #include "SDL2/SDL_image.h"
 #include <stdio.h>
 #include <string>
 
@@ -12,46 +13,6 @@ Texture::~Texture()
     //Deallocate
     free();
 }
-
-/*bool Texture::loadFromFile( std::string path )
-{
-    //Get rid of preexisting texture
-    free();
-
-    //The final texture
-    SDL_Texture* newTexture = NULL;
-
-    //Load image at specified path
-    SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
-    if( loadedSurface == NULL )
-    {
-        printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
-    }
-    else
-    {
-        //Color key image
-        SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB( loadedSurface->format, 0, 0xFF, 0xFF ) );
-        //Create texture from surface pixels
-        newTexture = SDL_CreateTextureFromSurface( _sdl_renderer, loadedSurface );
-        if( newTexture == NULL )
-        {
-            printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
-        }
-        else
-        {
-            //Get image dimensions
-            _width = loadedSurface->w;
-            _height = loadedSurface->h;
-        }
-
-        //Get rid of old loaded surface
-        SDL_FreeSurface( loadedSurface );
-    }
-
-    //Return success
-    _texture = newTexture;
-    return _texture != NULL;
-}*/
 
 bool Texture::loadFromRenderedText( std::string textureText, SDL_Color textColor, TTF_Font *font )
 {
@@ -100,11 +61,13 @@ void Texture::free()
     }
 }
 
-void Texture::render( int x, int y )
+void Texture::render(int x, int y)
 {
     //Set rendering space and render to screen
     SDL_Rect renderQuad = { x, y, _width, _height };
-    SDL_RenderCopy( _sdl_renderer, _texture, NULL, &renderQuad );
+
+    //Render to screen
+    SDL_RenderCopy(_sdl_renderer, _texture, NULL, &renderQuad);
 }
 
 int Texture::getWidth()
@@ -115,4 +78,24 @@ int Texture::getWidth()
 int Texture::getHeight()
 {
     return _height;
+}
+
+SDL_Texture* Texture::getTexture() {
+    return _texture;
+}
+SDL_Renderer* Texture::getSDLRenderer() {
+    return _sdl_renderer;
+}
+
+void Texture::setWidth(int width) {
+    _width = width;
+}
+void Texture::setHeight(int height) {
+    _height = height;
+}
+void Texture::setTexture(SDL_Texture *t) {
+    _texture = t;
+}
+void Texture::setSDLRenderer(SDL_Renderer *sdlr) {
+    _sdl_renderer = sdlr;
 }
