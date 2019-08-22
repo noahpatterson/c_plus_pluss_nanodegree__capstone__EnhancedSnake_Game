@@ -4,6 +4,7 @@
 #include <vector>
 #include "button.h"
 #include "SDL.h"
+#include "SDL2/SDL_ttf.h"
 #include "snake.h"
 
 class Renderer {
@@ -24,6 +25,8 @@ class Renderer {
   const std::size_t screen_height;
   const std::size_t grid_width;
   const std::size_t grid_height;
+
+  TTF_Font *font;
 };
 
 #endif

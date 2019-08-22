@@ -9,7 +9,7 @@
 
 class Game {
  public:
-  Game(std::size_t grid_width, std::size_t grid_height);
+  Game(std::size_t grid_width, std::size_t grid_height, std::size_t screen_width, std::size_t screen_height);
   void Run(Controller const &controller, Renderer &renderer, std::size_t target_frame_duration);
   int GetScore() const;
   int GetSize() const;
@@ -30,6 +30,8 @@ class Game {
   void Update();
   int _grid_width;
   int _grid_height;
+  int _screen_width;
+  int _screen_height;
 };
 
 #endif

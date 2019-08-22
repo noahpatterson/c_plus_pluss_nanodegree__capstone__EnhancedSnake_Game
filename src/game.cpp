@@ -3,13 +3,15 @@
 #include "SDL.h"
 #include "button.h"
 
-Game::Game(std::size_t grid_width, std::size_t grid_height)
+Game::Game(std::size_t grid_width, std::size_t grid_height, std::size_t screen_width, std::size_t screen_height)
     : snake(grid_width, grid_height),
       engine(dev()),
       random_w(0, static_cast<int>(grid_width)),
       random_h(0, static_cast<int>(grid_height)),
       _grid_height(grid_height),
-      _grid_width(grid_width) {
+      _grid_width(grid_width),
+      _screen_height(screen_height),
+      _screen_width(screen_width) {
   PlaceFood();
 }
 
@@ -25,7 +27,7 @@ void Game::Run(Controller const &controller, Renderer &renderer, std::size_t tar
     frame_start = SDL_GetTicks();
 
     //create restart button
-    Button restart_button(0, 0, 2, 2);
+    Button restart_button;
 
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake);
@@ -39,13 +41,13 @@ void Game::Run(Controller const &controller, Renderer &renderer, std::size_t tar
       int x, y;
       if (SDL_GetMouseState(&x, &y)) {
         bool inside = true;
-        if (x < restart_button._position.x) {
+        if (x < restart_button.position.x) {
           inside = false;
-        } else if (x > restart_button._position.x + restart_button._relativeWidth) {
+        } else if (x > restart_button.position.x + restart_button.relativeWidth) {
           inside = false;
-        } else if (y < restart_button._position.y) {
+        } else if (y < restart_button.position.y) {
           inside = false;
-        } else if ( y > restart_button._position.y + restart_button._relativeHeight) {
+        } else if ( y > restart_button.position.y + restart_button.relativeHeight) {
           inside = false;
         }
 

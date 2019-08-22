@@ -2,6 +2,8 @@
 #include "button.h"
 #include <iostream>
 #include <string>
+#include "texture.h"
+#include "SDL2/SDL_ttf.h"
 
 Renderer::Renderer(const std::size_t screen_width,
                    const std::size_t screen_height,
@@ -35,7 +37,15 @@ Renderer::Renderer(const std::size_t screen_width,
 }
 
 Renderer::~Renderer() {
+  // TODO need to close TTF_FONT `TTF_CloseFont( gFont );gFont = NULL;`
   SDL_DestroyWindow(sdl_window);
+  TTF_CloseFont(font);
+  font = NULL;
+  SDL_DestroyRenderer(sdl_renderer);
+  SDL_DestroyWindow(sdl_window);
+  sdl_window = NULL;
+  sdl_renderer = NULL;
+  TTF_Quit();
   SDL_Quit();
 }
 
@@ -72,13 +82,46 @@ void Renderer::Render(Snake const snake, SDL_Point const &food, Button &restart_
   }
   SDL_RenderFillRect(sdl_renderer, &block);
 
-  // Render restart button 66CD00
+  // Render restart button
   if (!snake.alive) {
-    restart_button.setRelativeHeight(screen_height, grid_height);
-    restart_button.setRelativeWidth(screen_width, grid_width);
-    SDL_SetRenderDrawColor(sdl_renderer, 0x66, 0xCD, 0x00, 0xFF);
+    //setup texture
+    Texture textTexture(sdl_renderer);
+    bool success = true;
+    //Initialize SDL_ttf
+    if(TTF_Init() == -1) {
+        printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+        success = false;
+    }
+
+    font = TTF_OpenFont("../fonts/Roboto-Black.ttf", 28);
+    if(font == NULL) {
+        printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
+        success = false;
+    } else {
+        //Render text
+        SDL_Color textColor = { 0, 0, 0 };
+        if(!textTexture.loadFromRenderedText( "Restart Game", textColor, font )) {
+            printf("Failed to render text texture!\n");
+            success = false;
+        }
+    }
+    int textureWidth  = textTexture.getWidth();
+    int textureHeight = textTexture.getHeight();
+    int buttonPositionX = (screen_width - textureWidth) / 2;
+    int buttonPositionY = (screen_height -  textureHeight) / 2;
+
+    restart_button.setRelativeHeight(textureHeight, 0, true);
+    restart_button.setRelativeWidth(textureWidth, 0, true);
+    restart_button.position.x = buttonPositionX;
+    restart_button.position.y = buttonPositionY;
+    SDL_SetRenderDrawColor(sdl_renderer, 0xEF, 0xF2, 0x49, 0xFF); //#EFF249
     SDL_Rect restartButton = restart_button.createButtonRect();
     SDL_RenderFillRect(sdl_renderer, &restartButton);
+
+    //render text on top of button
+    if (success) {
+      textTexture.render(buttonPositionX, buttonPositionY);
+    }
   }
 
   // Update Screen

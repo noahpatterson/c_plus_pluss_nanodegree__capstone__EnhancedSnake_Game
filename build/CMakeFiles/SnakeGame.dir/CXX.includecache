@@ -6,61 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/button.cpp
-button.h
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/button.h
-iostream
--
-
 /Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/button.h
 SDL.h
 /Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/SDL.h
-
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/controller.cpp
-controller.h
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/controller.h
-iostream
--
-SDL.h
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/SDL.h
-snake.h
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/snake.h
-
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/controller.h
-snake.h
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/snake.h
-
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/game.cpp
-game.h
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/game.h
-iostream
--
-SDL.h
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/SDL.h
-button.h
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/button.h
-
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/game.h
-random
--
-SDL.h
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/SDL.h
-controller.h
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/controller.h
-renderer.h
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/renderer.h
-snake.h
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/snake.h
-
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/main.cpp
-iostream
--
-controller.h
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/controller.h
-game.h
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/game.h
-renderer.h
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/renderer.h
 
 /Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/renderer.cpp
 renderer.h
@@ -71,6 +19,10 @@ iostream
 -
 string
 -
+texture.h
+/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/texture.h
+SDL2/SDL_ttf.h
+/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/SDL2/SDL_ttf.h
 
 /Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/renderer.h
 vector
@@ -79,6 +31,8 @@ button.h
 /Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/button.h
 SDL.h
 /Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/SDL.h
+SDL2/SDL_ttf.h
+/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/SDL2/SDL_ttf.h
 snake.h
 /Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/snake.h
 
@@ -87,6 +41,16 @@ vector
 -
 SDL.h
 /Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/SDL.h
+
+/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/texture.h
+SDL2/SDL.h
+/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/SDL2/SDL.h
+SDL2/SDL_ttf.h
+/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/src/SDL2/SDL_ttf.h
+stdio.h
+-
+string
+-
 
 /usr/local/Cellar/sdl2/2.0.9_1/include/SDL2/SDL.h
 SDL_main.h
