@@ -22,7 +22,7 @@ class Game {
   int score{0};
 
   void PlaceFood(int x, int y);
-  void Update(RandomPoint &donutPoint);
+  void Update(RandomPoint &donutPoint, RandomPoint &bombPoint);
   int _grid_width;
   int _grid_height;
   int _screen_width;

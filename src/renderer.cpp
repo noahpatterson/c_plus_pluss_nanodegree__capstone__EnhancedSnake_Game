@@ -51,7 +51,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(Snake const snake, SDL_Point const &food, Button &restart_button, unsigned int &donutTimer, RandomPoint &donutPoint) {
+void Renderer::Render(Snake const snake, SDL_Point const &food, Button &restart_button, unsigned int &donutTimer, RandomPoint &donutPoint, unsigned int &bombTimer, RandomPoint &bombPoint) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -68,10 +68,8 @@ void Renderer::Render(Snake const snake, SDL_Point const &food, Button &restart_
 
   //render donut item
   Obstacle donut(sdl_renderer, Clip::donut);
-
   //move donut every 10 seconds (when running at 60fps)
   const unsigned int timeTillDonutReset = 600;
-
   //Initialize PNG loading
   int imgFlags = IMG_INIT_PNG;
   if(!(IMG_Init(imgFlags) & imgFlags))
@@ -84,6 +82,19 @@ void Renderer::Render(Snake const snake, SDL_Point const &food, Button &restart_
     //create a random point to move the donut to
     donutPoint.randomizePoint();
     donutTimer = 0;
+  }
+
+  //render bomb item
+  Obstacle bomb(sdl_renderer, Clip::bomb);
+  //move donut every 10 seconds (when running at 60fps)
+  const unsigned int timeTillBombReset = 600;
+  if (bombTimer < timeTillBombReset && snake.alive) {
+    bomb.render(bombPoint.x, bombPoint.y);
+    ++bombTimer;
+  } else {
+    //create a random point to move the donut to
+    bombPoint.randomizePoint();
+    bombTimer = 0;
   }
 
   // Render snake's body
@@ -107,7 +118,7 @@ void Renderer::Render(Snake const snake, SDL_Point const &food, Button &restart_
   } else if (snake.growing) {
     SDL_SetRenderDrawColor(sdl_renderer, 0x7F, 0xBF, 0xFF, 0x3F);
   } else {
-    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(sdl_renderer, 0xF3, 0x1B, 0x1B, 0xFF);
   }
   SDL_RenderFillRect(sdl_renderer, &block);
 

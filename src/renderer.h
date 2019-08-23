@@ -15,7 +15,7 @@ class Renderer {
            const std::size_t grid_width, const std::size_t grid_height);
   ~Renderer();
 
-  void Render(Snake const snake, SDL_Point const &food, Button &restart_button, unsigned int &donutTimer, RandomPoint &donutPoint);
+  void Render(Snake const snake, SDL_Point const &food, Button &restart_button, unsigned int &donutTimer, RandomPoint &donutPoint, unsigned int &bombTimer, RandomPoint &bombPoint);
 
   void UpdateWindowTitle(int score, int fps);
 

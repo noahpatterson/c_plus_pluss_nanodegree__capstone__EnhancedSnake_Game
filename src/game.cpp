@@ -22,7 +22,9 @@ void Game::Run(Controller const &controller, Renderer &renderer, std::size_t tar
   int frame_count = 0;
   bool running = true;
   unsigned int donutTimer = 0;
+  unsigned int bombTimer = 0;
   RandomPoint donutPoint(snake, _grid_width, _grid_height, _screen_width, _screen_height);
+  RandomPoint bombPoint(snake, _grid_width, _grid_height, _screen_width, _screen_height);
   //create restart button
   Button restart_button;
 
@@ -32,8 +34,8 @@ void Game::Run(Controller const &controller, Renderer &renderer, std::size_t tar
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake);
 
-    Update(donutPoint);
-    renderer.Render(snake, food, restart_button, donutTimer, donutPoint);
+    Update(donutPoint, bombPoint);
+    renderer.Render(snake, food, restart_button, donutTimer, donutPoint, bombTimer, bombPoint);
 
     //extract this to method
     if (!snake.alive) {
@@ -90,7 +92,7 @@ void Game::PlaceFood(int x, int y) {
   food.y = y;
 }
 
-void Game::Update(RandomPoint &donutPoint) {
+void Game::Update(RandomPoint &donutPoint, RandomPoint &bombPoint) {
   if (!snake.alive) {
     return;
   };
@@ -111,8 +113,6 @@ void Game::Update(RandomPoint &donutPoint) {
   }
 
   // Check if snake eats donut
-  // int donutGridPointX =  donutPoint.x / (_screen_width / _grid_width);
-  // int donutGridPointY =  donutPoint.y / (_screen_height / _grid_height);
   int donutGridPointX =  donutPoint.x / (_screen_width / _grid_width);
   int donutGridPointY =  donutPoint.y / (_screen_height / _grid_height);
   if ((donutGridPointX == new_x && donutGridPointY == new_y) ||
@@ -123,6 +123,15 @@ void Game::Update(RandomPoint &donutPoint) {
     // Grow snake and increase speed.
     snake.GrowBody(3);
     snake.speed += 0.02;
+  }
+
+  // Check if snake eats bomb
+  int bombGridPointX =  bombPoint.x / (_screen_width / _grid_width);
+  int bombGridPointY =  bombPoint.y / (_screen_height / _grid_height);
+  if ((bombGridPointX == new_x && bombGridPointY == new_y) ||
+      (bombGridPointX + 1 == new_x && bombGridPointY +1 == new_y) ||
+      (bombGridPointX - 1 == new_x && bombGridPointY - 1 == new_y)) {
+    snake.alive = false;
   }
 }
 
