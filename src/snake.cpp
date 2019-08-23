@@ -50,13 +50,13 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
     // Remove the tail from the vector.
     body.erase(body.begin());
   } else {
-    growing = false;
     int growSize = 0;
     while(growSize < growMultiplier) {
       body.push_back(prev_head_cell);
       size += 1;
       --growMultiplier;
     }
+    growing = false;
   }
 
   // Check if the snake has died.
