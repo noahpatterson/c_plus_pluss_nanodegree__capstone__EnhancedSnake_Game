@@ -27,6 +27,7 @@ void Game::Run(Controller const &controller, Renderer &renderer, std::size_t tar
   RandomPoint bombPoint(snake, _grid_width, _grid_height, _screen_width, _screen_height);
   //create restart button
   Button restart_button;
+  Button score_button;
 
   while (running) {
     frame_start = SDL_GetTicks();
@@ -34,27 +35,47 @@ void Game::Run(Controller const &controller, Renderer &renderer, std::size_t tar
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake);
 
-    Update(donutPoint, bombPoint);
-    renderer.Render(snake, food, restart_button, donutTimer, donutPoint, bombTimer, bombPoint);
+
+    if (!showingScore) {
+      Update(donutPoint, bombPoint);
+      renderer.Render(snake, food, restart_button, score_button, donutTimer, donutPoint, bombTimer, bombPoint);
+    }
 
     //extract this to method
     if (!snake.alive) {
       SDL_PumpEvents();
       int x, y;
       if (SDL_GetMouseState(&x, &y)) {
-        bool inside = true;
+        bool inside_restart = true;
         if (x < restart_button.position.x) {
-          inside = false;
+          inside_restart = false;
         } else if (x > restart_button.position.x + restart_button.relativeWidth) {
-          inside = false;
+          inside_restart = false;
         } else if (y < restart_button.position.y) {
-          inside = false;
+          inside_restart = false;
         } else if ( y > restart_button.position.y + restart_button.relativeHeight) {
-          inside = false;
+          inside_restart = false;
         }
 
-        if (inside) {
+        if (inside_restart) {
           RestartGame();
+        }
+
+        bool inside_score = true;
+        if (x < score_button.position.x) {
+          inside_score = false;
+        } else if (x > score_button.position.x + score_button.relativeWidth) {
+          inside_score = false;
+        } else if (y < score_button.position.y) {
+          inside_score = false;
+        } else if ( y > score_button.position.y + score_button.relativeHeight) {
+          inside_score = false;
+        }
+
+        if (inside_score) {
+          std::cout << "hit score button\n";
+          showingScore = true;
+          renderer.RenderScore(GetScore(), GetSize());
         }
       }
     }
@@ -118,7 +139,7 @@ void Game::Update(RandomPoint &donutPoint, RandomPoint &bombPoint) {
   if ((donutGridPointX == new_x && donutGridPointY == new_y) ||
       (donutGridPointX + 1 == new_x && donutGridPointY +1 == new_y) ||
       (donutGridPointX - 1 == new_x && donutGridPointY - 1 == new_y)) {
-    score++;
+    score+= 10;
     donutPoint.randomizePoint();
     // Grow snake and increase speed.
     snake.GrowBody(3);

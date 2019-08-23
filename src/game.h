@@ -20,6 +20,7 @@ class Game {
   SDL_Point food;
 
   int score{0};
+  bool showingScore{false};
 
   void PlaceFood(int x, int y);
   void Update(RandomPoint &donutPoint, RandomPoint &bombPoint);
