@@ -51,10 +51,12 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
     body.erase(body.begin());
   } else {
     growing = false;
-    body.push_back(prev_head_cell);
-    body.push_back(prev_head_cell);
-    body.push_back(prev_head_cell);
-    size += 4;
+    int growSize = 0;
+    while(growSize < growMultiplier) {
+      body.push_back(prev_head_cell);
+      size += 1;
+      --growMultiplier;
+    }
   }
 
   // Check if the snake has died.
@@ -65,7 +67,10 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
   }
 }
 
-void Snake::GrowBody() { growing = true; }
+void Snake::GrowBody(int growMulti) {
+  growing = true;
+  growMultiplier = growMulti;
+}
 
 // Inefficient method to check if cell is occupied by snake.
 bool Snake::SnakeCell(int x, int y) {

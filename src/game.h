@@ -19,15 +19,10 @@ class Game {
   Snake snake;
   SDL_Point food;
 
-  std::random_device dev;
-  std::mt19937 engine;
-  std::uniform_int_distribution<int> random_w;
-  std::uniform_int_distribution<int> random_h;
-
   int score{0};
 
-  void PlaceFood();
-  void Update();
+  void PlaceFood(int x, int y);
+  void Update(RandomPoint &donutPoint);
   int _grid_width;
   int _grid_height;
   int _screen_width;

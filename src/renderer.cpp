@@ -6,6 +6,7 @@
 #include "obstacle.h"
 #include "SDL2/SDL_ttf.h"
 #include "SDL2/SDL_image.h"
+#include "Helpers.h"
 
 Renderer::Renderer(const std::size_t screen_width,
                    const std::size_t screen_height,
@@ -50,7 +51,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(Snake const snake, SDL_Point const &food, Button &restart_button) {
+void Renderer::Render(Snake const snake, SDL_Point const &food, Button &restart_button, unsigned int &donutTimer, RandomPoint &donutPoint) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -61,9 +62,29 @@ void Renderer::Render(Snake const snake, SDL_Point const &food, Button &restart_
 
   // Render food
   SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xCC, 0x00, 0xFF);
-  block.x = food.x * block.w;
-  block.y = food.y * block.h;
+  block.x = food.x;
+  block.y = food.y;
   SDL_RenderFillRect(sdl_renderer, &block);
+
+  //render donut item
+  Obstacle donut(sdl_renderer, Clip::donut);
+
+  //move donut every 10 seconds (when running at 60fps)
+  const unsigned int timeTillDonutReset = 600;
+
+  //Initialize PNG loading
+  int imgFlags = IMG_INIT_PNG;
+  if(!(IMG_Init(imgFlags) & imgFlags))
+  {
+    printf( "SDL_image could not initialize! SDL_mage Error: %s\n", IMG_GetError() );
+  } else if (donutTimer < timeTillDonutReset && snake.alive) {
+    donut.render(donutPoint.x, donutPoint.y);
+    ++donutTimer;
+  } else {
+    //create a random point to move the donut to
+    donutPoint.randomizePoint();
+    donutTimer = 0;
+  }
 
   // Render snake's body
   SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -125,17 +146,6 @@ void Renderer::Render(Snake const snake, SDL_Point const &food, Button &restart_
     }
   }
 
-  //render donut item
-  Obstacle donut(sdl_renderer, Clip::donut);
-
-  //Initialize PNG loading
-  int imgFlags = IMG_INIT_PNG;
-  if(!(IMG_Init(imgFlags) & imgFlags))
-  {
-    printf( "SDL_image could not initialize! SDL_mage Error: %s\n", IMG_GetError() );
-  } else {
-    donut.render(0, 0);
-  }
 
 
   // Update Screen

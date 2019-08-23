@@ -2,17 +2,16 @@
 #include <iostream>
 #include "SDL.h"
 #include "button.h"
+#include "Helpers.h"
 
 Game::Game(std::size_t grid_width, std::size_t grid_height, std::size_t screen_width, std::size_t screen_height)
     : snake(grid_width, grid_height),
-      engine(dev()),
-      random_w(0, static_cast<int>(grid_width)),
-      random_h(0, static_cast<int>(grid_height)),
       _grid_height(grid_height),
       _grid_width(grid_width),
       _screen_height(screen_height),
       _screen_width(screen_width) {
-  PlaceFood();
+  RandomPoint foodPoint(snake, grid_width, grid_height, _screen_width, _screen_height);
+  PlaceFood(foodPoint.x, foodPoint.y);
 }
 
 void Game::Run(Controller const &controller, Renderer &renderer, std::size_t target_frame_duration) {
@@ -22,18 +21,19 @@ void Game::Run(Controller const &controller, Renderer &renderer, std::size_t tar
   Uint32 frame_duration;
   int frame_count = 0;
   bool running = true;
+  unsigned int donutTimer = 0;
+  RandomPoint donutPoint(snake, _grid_width, _grid_height, _screen_width, _screen_height);
+  //create restart button
+  Button restart_button;
 
   while (running) {
     frame_start = SDL_GetTicks();
 
-    //create restart button
-    Button restart_button;
-
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake);
 
-    Update();
-    renderer.Render(snake, food, restart_button);
+    Update(donutPoint);
+    renderer.Render(snake, food, restart_button, donutTimer, donutPoint);
 
     //extract this to method
     if (!snake.alive) {
@@ -85,22 +85,12 @@ void Game::RestartGame() {
   snake.alive = true;
 }
 
-void Game::PlaceFood() {
-  int x, y;
-  while (true) {
-    x = random_w(engine);
-    y = random_h(engine);
-    // Check that the location is not occupied by a snake item before placing
-    // food.
-    if (!snake.SnakeCell(x, y)) {
-      food.x = x;
-      food.y = y;
-      return;
-    }
-  }
+void Game::PlaceFood(int x, int y) {
+  food.x = x;
+  food.y = y;
 }
 
-void Game::Update() {
+void Game::Update(RandomPoint &donutPoint) {
   if (!snake.alive) {
     return;
   };
@@ -111,11 +101,27 @@ void Game::Update() {
   int new_y = static_cast<int>(snake.head_y);
 
   // Check if there's food over here
-  if (food.x == new_x && food.y == new_y) {
+  if (food.x / (_screen_width / _grid_width) == new_x && food.y / (_screen_height / _grid_height) == new_y) {
     score++;
-    PlaceFood();
+    RandomPoint foodPoint(snake, _grid_width, _grid_height, _screen_width, _screen_height);
+    PlaceFood(foodPoint.x, foodPoint.y);
     // Grow snake and increase speed.
-    snake.GrowBody();
+    snake.GrowBody(1);
+    snake.speed += 0.02;
+  }
+
+  // Check if snake eats donut
+  // int donutGridPointX =  donutPoint.x / (_screen_width / _grid_width);
+  // int donutGridPointY =  donutPoint.y / (_screen_height / _grid_height);
+  int donutGridPointX =  donutPoint.x / (_screen_width / _grid_width);
+  int donutGridPointY =  donutPoint.y / (_screen_height / _grid_height);
+  if ((donutGridPointX == new_x && donutGridPointY == new_y) ||
+      (donutGridPointX + 1 == new_x && donutGridPointY +1 == new_y) ||
+      (donutGridPointX - 1 == new_x && donutGridPointY - 1 == new_y)) {
+    score++;
+    donutPoint.randomizePoint();
+    // Grow snake and increase speed.
+    snake.GrowBody(3);
     snake.speed += 0.02;
   }
 }
