@@ -1,3 +1,0 @@
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/build/CMakeFiles/rebuild_cache.dir
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/build/CMakeFiles/edit_cache.dir
-/Users/noahpatterson/Developer/cpp_nanodegree/CppND-Capstone-Snake-Game/build/CMakeFiles/SnakeGame.dir
