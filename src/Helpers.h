@@ -26,4 +26,6 @@ struct RandomPoint {
 
 };
 
+void writeScoreFile(int score, int size);
+
 #endif

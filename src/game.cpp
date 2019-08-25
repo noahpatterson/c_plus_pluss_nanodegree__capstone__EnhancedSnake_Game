@@ -28,6 +28,7 @@ void Game::Run(Controller const &controller, Renderer &renderer, std::size_t tar
   //create restart button
   Button restart_button;
   Button score_button;
+  Button saveScoreButton;
 
   while (running) {
     frame_start = SDL_GetTicks();
@@ -38,12 +39,12 @@ void Game::Run(Controller const &controller, Renderer &renderer, std::size_t tar
 
     if (!showingScore) {
       Update(donutPoint, bombPoint);
-      renderer.Render(snake, food, restart_button, score_button, donutTimer, donutPoint, bombTimer, bombPoint);
+      renderer.Render(snake, food, restart_button, score_button, saveScoreButton, donutTimer, donutPoint, bombTimer, bombPoint);
     }
 
     //extract this to method
     if (!snake.alive) {
-      SDL_PumpEvents();
+      //SDL_PumpEvents();
       int x, y;
       if (SDL_GetMouseState(&x, &y)) {
         bool inside_restart = true;
@@ -58,6 +59,7 @@ void Game::Run(Controller const &controller, Renderer &renderer, std::size_t tar
         }
 
         if (inside_restart) {
+          showingScore = false;
           RestartGame();
         }
 
@@ -73,9 +75,23 @@ void Game::Run(Controller const &controller, Renderer &renderer, std::size_t tar
         }
 
         if (inside_score) {
-          std::cout << "hit score button\n";
           showingScore = true;
-          renderer.RenderScore(GetScore(), GetSize());
+          renderer.RenderScore(GetScore(), GetSize(), snake, restart_button, saveScoreButton);
+        }
+
+        bool save_score = true;
+        if (x < saveScoreButton.position.x) {
+          save_score = false;
+        } else if (x > saveScoreButton.position.x + saveScoreButton.relativeWidth) {
+          save_score = false;
+        } else if (y < saveScoreButton.position.y) {
+          save_score = false;
+        } else if ( y > saveScoreButton.position.y + saveScoreButton.relativeHeight) {
+          save_score = false;
+        }
+
+        if (save_score) {
+          writeScoreFile(GetScore(), GetSize());
         }
       }
     }
@@ -105,6 +121,7 @@ void Game::Run(Controller const &controller, Renderer &renderer, std::size_t tar
 
 void Game::RestartGame() {
   snake = Snake(_grid_width, _grid_height);
+  score = 0;
   snake.alive = true;
 }
 

@@ -51,7 +51,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(Snake const snake, SDL_Point const &food, Button &restart_button, Button &score_button, unsigned int &donutTimer, RandomPoint &donutPoint, unsigned int &bombTimer, RandomPoint &bombPoint) {
+void Renderer::Render(Snake const snake, SDL_Point const &food, Button &restart_button, Button &score_button, Button &saveScoreButton, unsigned int &donutTimer, RandomPoint &donutPoint, unsigned int &bombTimer, RandomPoint &bombPoint) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -122,55 +122,23 @@ void Renderer::Render(Snake const snake, SDL_Point const &food, Button &restart_
   }
   SDL_RenderFillRect(sdl_renderer, &block);
 
-  // Render restart button
+  //setup show Score button
+  //setup texture
   if (!snake.alive) {
-    //setup texture
-    Texture restartTexture(sdl_renderer);
     bool success = true;
-    //Initialize SDL_ttf
-    if(TTF_Init() == -1) {
-        printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
-        success = false;
-    }
-
-    font = TTF_OpenFont("../fonts/Roboto-Black.ttf", 28);
-    if(font == NULL) {
-        printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
-        success = false;
-    } else {
-        //Render text
-        SDL_Color textColor = { 0, 0, 0 };
-        if(!restartTexture.loadFromRenderedText( "Restart Game", textColor, font )) {
-            printf("Failed to render text texture!\n");
-            success = false;
-        }
-    }
-    int textureWidth  = restartTexture.getWidth();
-    int textureHeight = restartTexture.getHeight();
-    int restartButtonPositionX = (screen_width - textureWidth) / 2 - 100;
-    int restartButtonPositionY = (screen_height -  textureHeight) / 2;
-
-    restart_button.setRelativeHeight(textureHeight, 0, true);
-    restart_button.setRelativeWidth(textureWidth, 0, true);
-    restart_button.position.x = restartButtonPositionX;
-    restart_button.position.y = restartButtonPositionY;
-    SDL_SetRenderDrawColor(sdl_renderer, 0xEF, 0xF2, 0x49, 0xFF); //#EFF249
-    SDL_Rect restartButton = restart_button.createButtonRect();
-    SDL_RenderFillRect(sdl_renderer, &restartButton);
-
-
-    //setup show Score button
-    //setup texture
+    success = InitFont();
     Texture showScoreTexture(sdl_renderer);
     SDL_Color textColor = { 0, 0, 0 };
-    //Render text
-    if(!showScoreTexture.loadFromRenderedText( "Show Score", textColor, font )) {
-        printf("Failed to render text texture!\n");
-        success = false;
+    if (success) {
+      //Render text
+      if(!showScoreTexture.loadFromRenderedText( "Show Score", textColor, font )) {
+          printf("Failed to render text texture!\n");
+          success = false;
+      }
     }
 
-    textureWidth  = showScoreTexture.getWidth();
-    textureHeight = showScoreTexture.getHeight();
+    int textureWidth  = showScoreTexture.getWidth();
+    int textureHeight = showScoreTexture.getHeight();
     int scoreButtonPositionX = (screen_width - textureWidth) / 2 + 100;
     int scoreButtonPositionY = (screen_height -  textureHeight) / 2;
 
@@ -182,45 +150,35 @@ void Renderer::Render(Snake const snake, SDL_Point const &food, Button &restart_
     SDL_Rect scoreButton = score_button.createButtonRect();
     SDL_RenderFillRect(sdl_renderer, &scoreButton);
 
+
     //render text on top of button
     if (success) {
-      restartTexture.render(restartButtonPositionX, restartButtonPositionY);
+      RenderRestartButton(snake, restart_button);
       showScoreTexture.render(scoreButtonPositionX, scoreButtonPositionY);
     }
   }
-
-
 
   // Update Screen
   SDL_RenderPresent(sdl_renderer);
 }
 
-void Renderer::RenderScore(int score, int size) {
+void Renderer::RenderScore(int score, int size, Snake const &snake, Button &restart_button, Button &saveScoreButton) {
   // Clear screen
   SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
   SDL_RenderClear(sdl_renderer);
 
   //setup texture
-  Texture scoreTexture(sdl_renderer);
   bool success = true;
-  //Initialize SDL_ttf
-  if(TTF_Init() == -1) {
-      printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
-      success = false;
-  }
-
-  font = TTF_OpenFont("../fonts/Roboto-Black.ttf", 28);
-  if(font == NULL) {
-      printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
-      success = false;
-  } else {
-      //Render text
-      SDL_Color textColor = { 0, 0, 0 };
-      std::string _score("Score: " + std::to_string(score));
-      if(!scoreTexture.loadFromRenderedText( _score, textColor, font )) {
-          printf("Failed to render text texture!\n");
-          success = false;
-      }
+  success = InitFont();
+  Texture scoreTexture(sdl_renderer);
+  if (success) {
+    //Render text
+    SDL_Color textColor = { 0, 0, 0 };
+    std::string _score("Score: " + std::to_string(score));
+    if(!scoreTexture.loadFromRenderedText( _score, textColor, font )) {
+        printf("Failed to render text texture!\n");
+        success = false;
+    }
   }
 
   int textureWidth  = scoreTexture.getWidth();
@@ -228,20 +186,23 @@ void Renderer::RenderScore(int score, int size) {
 
   //show size
   Texture sizeTexture(sdl_renderer);
-  SDL_Color textColor = { 0, 0, 0 };
-  std::string _size("Size: " + std::to_string(size));
-  if(!sizeTexture.loadFromRenderedText( _size, textColor, font )) {
-      printf("Failed to render text texture!\n");
-      success = false;
+  if (success) {
+    SDL_Color textColor = { 0, 0, 0 };
+    std::string _size("Size: " + std::to_string(size));
+    if(!sizeTexture.loadFromRenderedText( _size, textColor, font )) {
+        printf("Failed to render text texture!\n");
+        success = false;
+    }
   }
 
   int sizeTextureWidth  = sizeTexture.getWidth();
   int sizeTextureHeight = sizeTexture.getHeight();
 
-
   if (success) {
-    scoreTexture.render((screen_width - textureWidth) / 2 + 100, (screen_height -  textureHeight) / 2);
-    sizeTexture.render((screen_width - textureWidth) / 2 - 100, (screen_height -  textureHeight) / 2);
+    scoreTexture.render((screen_width - textureWidth) / 2 + 100, (screen_height -  textureHeight) / 2 - 100);
+    sizeTexture.render((screen_width - textureWidth) / 2 - 100, (screen_height -  textureHeight) / 2 - 100);
+    RenderRestartButton(snake, restart_button);
+    RenderSaveScoreButton(snake, saveScoreButton);
   }
 
   // Update Screen
@@ -251,4 +212,88 @@ void Renderer::RenderScore(int score, int size) {
 void Renderer::UpdateWindowTitle(int score, int fps) {
   std::string title{"Snake Score: " + std::to_string(score) + " FPS: " + std::to_string(fps)};
   SDL_SetWindowTitle(sdl_window, title.c_str());
+}
+
+void Renderer::RenderRestartButton(Snake const &snake, Button &restart_button) {
+  // Render restart button
+
+  //setup texture
+  Texture restartTexture(sdl_renderer);
+  bool success = true;
+  //Render text
+  SDL_Color textColor = { 0, 0, 0 };
+  if(!restartTexture.loadFromRenderedText( "Restart Game", textColor, font )) {
+      printf("Failed to render text texture!\n");
+      success = false;
+  }
+  int textureWidth  = restartTexture.getWidth();
+  int textureHeight = restartTexture.getHeight();
+  int restartButtonPositionX = (screen_width - textureWidth) / 2 - 100;
+  int restartButtonPositionY = (screen_height -  textureHeight) / 2;
+
+  restart_button.setRelativeHeight(textureHeight, 0, true);
+  restart_button.setRelativeWidth(textureWidth, 0, true);
+  restart_button.position.x = restartButtonPositionX;
+  restart_button.position.y = restartButtonPositionY;
+  SDL_SetRenderDrawColor(sdl_renderer, 0xEF, 0xF2, 0x49, 0xFF); //#EFF249
+  SDL_Rect restartButton = restart_button.createButtonRect();
+  SDL_RenderFillRect(sdl_renderer, &restartButton);
+
+  if (success) {
+    restartTexture.render(restartButtonPositionX, restartButtonPositionY);
+  }
+}
+
+void Renderer::RenderSaveScoreButton(Snake const &snake, Button &saveScoreButton) {
+  // Render restart button
+
+  //setup texture
+  Texture saveScoreTexture(sdl_renderer);
+  bool success = true;
+  //Render text
+  SDL_Color textColor = { 0, 0, 0 };
+  if(!saveScoreTexture.loadFromRenderedText( "Save Score", textColor, font )) {
+      printf("Failed to render text texture!\n");
+      success = false;
+  }
+  int textureWidth  = saveScoreTexture.getWidth();
+  int textureHeight = saveScoreTexture.getHeight();
+  int saveScoreButtonPositionX = (screen_width - textureWidth) / 2 - 100;
+  int saveScoreButtonPositionY = (screen_height -  textureHeight) / 2 + 100;
+
+  saveScoreButton.setRelativeHeight(textureHeight, 0, true);
+  saveScoreButton.setRelativeWidth(textureWidth, 0, true);
+  saveScoreButton.position.x = saveScoreButtonPositionX;
+  saveScoreButton.position.y = saveScoreButtonPositionY;
+  SDL_SetRenderDrawColor(sdl_renderer, 0xEF, 0xF2, 0x49, 0xFF); //#EFF249
+  SDL_Rect saveScoreButtonRect = saveScoreButton.createButtonRect();
+  SDL_RenderFillRect(sdl_renderer, &saveScoreButtonRect);
+
+  if (success) {
+    saveScoreTexture.render(saveScoreButtonPositionX, saveScoreButtonPositionY);
+  }
+}
+
+bool Renderer::InitFont() {
+  bool success = true;
+  if (!TTF_isInit) {
+    //Initialize SDL_ttf
+    if(TTF_Init() == -1) {
+        printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+        success = false;
+    } else {
+      TTF_isInit = true;
+    }
+  }
+
+  if (!fontInit) {
+    font = TTF_OpenFont("../fonts/Roboto-Black.ttf", 28);
+    if(font == NULL) {
+      printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
+      success = false;
+    } else {
+      fontInit = true;
+    }
+  }
+  return success;
 }

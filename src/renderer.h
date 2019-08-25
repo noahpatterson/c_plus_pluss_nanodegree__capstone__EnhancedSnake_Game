@@ -15,9 +15,9 @@ class Renderer {
            const std::size_t grid_width, const std::size_t grid_height);
   ~Renderer();
 
-  void Render(Snake const snake, SDL_Point const &food, Button &restart_button, Button &score_button, unsigned int &donutTimer, RandomPoint &donutPoint, unsigned int &bombTimer, RandomPoint &bombPoint);
+  void Render(Snake const snake, SDL_Point const &food, Button &restart_button, Button &score_button, Button &saveScoreButton, unsigned int &donutTimer, RandomPoint &donutPoint, unsigned int &bombTimer, RandomPoint &bombPoint);
 
-  void RenderScore(int score, int size);
+  void RenderScore(int score, int size, Snake const &snake, Button &restart_button, Button &saveScoreButton);
 
   void UpdateWindowTitle(int score, int fps);
 
@@ -31,6 +31,12 @@ class Renderer {
   const std::size_t grid_height;
 
   TTF_Font *font;
+  bool TTF_isInit{false};
+  bool fontInit{false};
+
+  void RenderRestartButton(Snake const &snake, Button &restart_button);
+  void RenderSaveScoreButton(Snake const &snake, Button &saveScoreButton);
+  bool InitFont();
 };
 
 #endif

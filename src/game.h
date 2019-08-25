@@ -24,6 +24,7 @@ class Game {
 
   void PlaceFood(int x, int y);
   void Update(RandomPoint &donutPoint, RandomPoint &bombPoint);
+  void SaveScoreToFile(int score, int size);
   int _grid_width;
   int _grid_height;
   int _screen_width;
