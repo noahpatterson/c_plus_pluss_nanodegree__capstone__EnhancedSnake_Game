@@ -2,10 +2,10 @@
 
 This is an Enhanced version of the starter Snake Game supplied by [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). The udacity project was inspired by [this](https://codereview.stackexchange.com/questions/212296/snake-game-in-c-with-sdl) excellent StackOverflow post and set of responses.
 
-<img src="snakegame1.png"/>
-<img src="snakegame2.png"/>
-<img src="snakegame3.png"/>
-<img src="snakegame4.png"/>
+<img src="snakegame1.png" width="200" height="200" />
+<img src="snakegame2.png" width="200" height="200" />
+<img src="snakegame3.png" width="200" height="200" />
+<img src="snakegame4.png" width="200" height="200" />
 
 ## Description
 
@@ -22,15 +22,15 @@ The new version utilizes new classes to help organize the game. The enhanced ver
 
 ## Rubric Points Met
 
-* **Loops, Functions, I/O** *-A variety of control structures are used in the project-*
+1. **Loops, Functions, I/O** *-A variety of control structures are used in the project-*
   - The program utilizes switches and while loops. /File: `game.cpp` line: 56/,  /File: `obstacle.cpp` line: 96/
-* **Loops, Functions, I/O** *-The project code is clearly organized into functions.-*
+2. **Loops, Functions, I/O** *-The project code is clearly organized into functions.-*
   - Care was taken to make sure that large files like `renderer.cpp` were broken into smaller, more reusable functions. /File: `renderer.cpp` line: 179/,  /File: `renderer.cpp` line: 207/, /File: `renderer.cpp` line: 219/
-* **Loops, Functions, I/O** *-The project reads data from an external file or writes data to a file as part of the necessary operation of the program.-*
+3. **Loops, Functions, I/O** *-The project reads data from an external file or writes data to a file as part of the necessary operation of the program.-*
   - The program uses `<fstream>` to write scores to a file. It reads in image files with SDL_Image. It also reads in a font file with SDL_ttf. /File: `Helpers.cpp` line: 51/,  /File: `obstacle.cpp` line: 89/
-* **Loops, Functions, I/O** *-The project accepts input from a user as part of the necessary operation of the program.-*
+4. **Loops, Functions, I/O** *-The project accepts input from a user as part of the necessary operation of the program.-*
   - The program takes user input from mouseclicks and keyboard events. Mouseclicks allow buttons to be tapped. Keyboard events allow for adding the users own file path. /File: `controller.cpp` line: 47/,  /File: `controller.cpp` line: 68/
-* **Object Oriented Programming** *-The project code is organized into classes with class attributes to hold the data, and class methods to perform tasks.-*
+5. **Object Oriented Programming** *-The project code is organized into classes with class attributes to hold the data, and class methods to perform tasks.-*
   - The program is split up into a number of new classes. Classes like Texture and it's Inheritor - Obstacle - allow for logic to be encapsulated and reused. The program also has a struct - RandomPoint - that encapsulates logic but didn't need to be a full blown class. The program uses Enums as well. /File: `texture.cpp` line: 1/, /File: `obstacle.cpp` line: 1/, /File: `button.cpp` line: 1/, /File: `Helpers.cpp` line: 9/, /File: `Helpers.h` line: 8/
 
 
