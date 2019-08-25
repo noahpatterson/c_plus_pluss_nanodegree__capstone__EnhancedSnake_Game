@@ -4,6 +4,7 @@
 #include <fstream>
 #include <regex>
 #include <iostream>
+#include <string>
 
 RandomPoint::RandomPoint(Snake &snake, std::size_t grid_width, std::size_t grid_height, std::size_t screen_width,
 std::size_t screen_height)
@@ -47,26 +48,22 @@ void RandomPoint::randomizePoint() {
   }
 }
 
-void writeScoreFile(int score, int size) {
+void writeScoreFile(int score, int size, std::string &fileLocation, bool &errorInFile) {
   std::ofstream scoreFile;
-  std::string fileLocation;
-  std::cout << "Please provide a file location. Default is the directory where the program is run.\n";
-  getline(std::cin,fileLocation);
 
   //check if user entry is a filepath
+  std::regex regx("^\\.+\\/*.*\\/+$");
   if (fileLocation.empty()) {
     fileLocation = "";
-  } else {
-    while (!std::regex_match(fileLocation, std::regex("(sub)^(([a-zA-Z]:)|(\\))(\\{1}|((\\{1})[^\\]([^/:*?<>\"|]*))+)$"))) {
-      std::cout << "The file path you entered was not a valid path. Please try again:\n";
-      std::cin >> fileLocation;
-    }
+  } else if (!std::regex_match(fileLocation.begin(), fileLocation.end(), regx)) {
+    errorInFile = true;
+    return;
   }
 
   scoreFile.open(fileLocation + "SnakeGame_Scores.txt", std::ios::app);
   if (scoreFile) {
     scoreFile << "Score: " << score << " Size: " << size << "\n";
-    std::cout << "Game Score Saved.\n";
     scoreFile.close();
+    errorInFile = false;
   }
 }

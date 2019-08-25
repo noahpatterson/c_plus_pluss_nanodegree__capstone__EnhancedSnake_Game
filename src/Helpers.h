@@ -3,11 +3,13 @@
 
 #include <random>
 #include "snake.h"
+#include <string>
 
 enum MouseActionButtons {
   restart,
   score,
   save_score,
+  saveScoreWithCustomFile,
   none
 };
 
@@ -33,6 +35,6 @@ struct RandomPoint {
 
 };
 
-void writeScoreFile(int score, int size);
+void writeScoreFile(int score, int size, std::string &fileLocation, bool &errorInFile);
 
 #endif

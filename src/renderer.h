@@ -20,6 +20,7 @@ class Renderer {
   void Render(Snake const snake, SDL_Point const &food, Button &restart_button, Button &score_button, Button &saveScoreButton, unsigned int &donutTimer, RandomPoint &donutPoint, unsigned int &bombTimer, RandomPoint &bombPoint);
 
   void RenderScore(int score, int size, Snake const &snake, Button &restart_button, Button &saveScoreButton);
+  void RenderUserInput(std::string text, Button &saveScoreWithCustomFileButton, int &timer, bool &errorInFile);
 
   void UpdateWindowTitle(int score, int fps);
 
@@ -38,7 +39,7 @@ class Renderer {
 
   void RenderButton(Button &button, std::string buttonText, int xPositionOffset = 0, int yPositionOffset = 0);
   void RenderObstacle(Obstacle &obstacle, RandomPoint &point, unsigned int &timer, const Snake &snake);
-  void RenderText(std::string text, int sizeOrScore, int xPositionOffset = 0, int yPositionOffset = 0);
+  void RenderText(std::string text, int xPositionOffset = 0, int yPositionOffset = 0, SDL_Color color = {0,0,0});
   bool InitFont();
 };
 

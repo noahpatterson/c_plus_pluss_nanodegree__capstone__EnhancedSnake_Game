@@ -4,6 +4,7 @@
 #include "button.h"
 #include "Helpers.h"
 #include "obstacle.h"
+#include <string>
 
 Game::Game(std::size_t grid_width, std::size_t grid_height, std::size_t screen_width, std::size_t screen_height)
     : snake(grid_width, grid_height),
@@ -24,18 +25,21 @@ void Game::Run(Controller const &controller, Renderer &renderer, std::size_t tar
   bool running = true;
   unsigned int donutTimer = 0;
   unsigned int bombTimer = 0;
+  int inputTimer = 0;
   RandomPoint donutPoint(snake, _grid_width, _grid_height, _screen_width, _screen_height);
   RandomPoint bombPoint(snake, _grid_width, _grid_height, _screen_width, _screen_height);
   //create restart button
   Button restart_button;
   Button score_button;
   Button saveScoreButton;
+  Button saveScoreWithCustomFileButton;
 
   while (running) {
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
-    controller.HandleInput(running, snake);
+    SDL_StartTextInput();
+    controller.HandleInput(running, snake, inputText, hasSavedFile);
 
 
     if (!showingScore) {
@@ -43,9 +47,12 @@ void Game::Run(Controller const &controller, Renderer &renderer, std::size_t tar
       renderer.Render(snake, food, restart_button, score_button, saveScoreButton, donutTimer, donutPoint, bombTimer, bombPoint);
     }
 
-    //extract this to method
+    if (showingScore && renderInput) {
+      renderer.RenderUserInput(inputText, saveScoreWithCustomFileButton, inputTimer, errorInFile);
+    }
+
     if (!snake.alive) {
-      MouseActionButtons buttonState = controller.HandleMouseLocation(restart_button, score_button, saveScoreButton);
+      MouseActionButtons buttonState = controller.HandleMouseLocation(restart_button, score_button, saveScoreButton, saveScoreWithCustomFileButton);
       switch (buttonState) {
         case MouseActionButtons::restart: {
           showingScore = false;
@@ -58,7 +65,19 @@ void Game::Run(Controller const &controller, Renderer &renderer, std::size_t tar
           break;
         }
         case MouseActionButtons::save_score: {
-          writeScoreFile(GetScore(), GetSize());
+          renderInput = true;
+          hasSavedFile = false;
+          break;
+        }
+        case MouseActionButtons::saveScoreWithCustomFile: {
+          if (!hasSavedFile) {
+            writeScoreFile(GetScore(), GetSize(), inputText, errorInFile);
+            if (!errorInFile) {
+              hasSavedFile = true;
+              showingScore = false;
+              renderInput = false;
+            }
+          }
           break;
         }
         case MouseActionButtons::none: {

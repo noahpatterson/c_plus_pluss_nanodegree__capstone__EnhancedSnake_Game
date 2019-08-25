@@ -11,7 +11,7 @@ void Controller::ChangeDirection(Snake &snake, Snake::Direction input,
   return;
 }
 
-void Controller::HandleInput(bool &running, Snake &snake) const {
+void Controller::HandleInput(bool &running, Snake &snake, std::string &inputText, bool &hasSavedFile) const {
   SDL_Event e;
   while (SDL_PollEvent(&e)) {
     if (e.type == SDL_QUIT) {
@@ -37,7 +37,16 @@ void Controller::HandleInput(bool &running, Snake &snake) const {
           ChangeDirection(snake, Snake::Direction::kRight,
                           Snake::Direction::kLeft);
           break;
+        case SDLK_BACKSPACE: {
+          //lop off character
+          if (inputText.length() > 0)
+            inputText.pop_back();
+          break;
+        }
       }
+    } else if (e.type == SDL_TEXTINPUT) {
+      inputText += e.text.text;
+      hasSavedFile = false;
     }
   }
 }
@@ -56,7 +65,7 @@ bool Controller::CheckButtonInteraction(Button &button, int &x, int &y) const {
   return inside;
 }
 
-MouseActionButtons Controller::HandleMouseLocation(Button &restart_button, Button &score_button, Button &saveScoreButton) const {
+MouseActionButtons Controller::HandleMouseLocation(Button &restart_button, Button &score_button, Button &saveScoreButton, Button &saveScoreWithCustomFileButton) const {
   int x, y;
   if (SDL_GetMouseState(&x, &y)) {
     if (CheckButtonInteraction(restart_button, x, y)) {
@@ -69,6 +78,9 @@ MouseActionButtons Controller::HandleMouseLocation(Button &restart_button, Butto
 
     if (CheckButtonInteraction(saveScoreButton, x, y)) {
       return MouseActionButtons::save_score;
+    }
+    if (CheckButtonInteraction(saveScoreWithCustomFileButton, x, y)) {
+      return MouseActionButtons::saveScoreWithCustomFile;
     }
   }
   return MouseActionButtons::none;

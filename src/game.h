@@ -6,6 +6,7 @@
 #include "controller.h"
 #include "renderer.h"
 #include "snake.h"
+#include <string>
 
 class Game {
  public:
@@ -21,6 +22,10 @@ class Game {
 
   int score{0};
   bool showingScore{false};
+  bool renderInput{false};
+  bool hasSavedFile{false};
+  bool errorInFile{false};
+  std::string inputText{""};
 
   void PlaceFood(int x, int y);
   void Update(RandomPoint &donutPoint, RandomPoint &bombPoint);
