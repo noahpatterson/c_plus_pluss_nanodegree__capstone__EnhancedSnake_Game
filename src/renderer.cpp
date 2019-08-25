@@ -69,34 +69,17 @@ void Renderer::Render(Snake const snake, SDL_Point const &food, Button &restart_
 
   //render donut item
   Obstacle donut(sdl_renderer, Clip::donut);
-  //move donut every 10 seconds (when running at 60fps)
-  const unsigned int timeTillDonutReset = 600;
   //Initialize PNG loading
   int imgFlags = IMG_INIT_PNG;
   if(!(IMG_Init(imgFlags) & imgFlags))
   {
     printf( "SDL_image could not initialize! SDL_mage Error: %s\n", IMG_GetError() );
-  } else if (donutTimer < timeTillDonutReset && snake.alive) {
-    donut.render(donutPoint.x, donutPoint.y);
-    ++donutTimer;
   } else {
-    //create a random point to move the donut to
-    donutPoint.randomizePoint();
-    donutTimer = 0;
+    RenderObstacle(donut, donutPoint, donutTimer, snake);
   }
-
   //render bomb item
   Obstacle bomb(sdl_renderer, Clip::bomb);
-  //move donut every 10 seconds (when running at 60fps)
-  const unsigned int timeTillBombReset = 600;
-  if (bombTimer < timeTillBombReset && snake.alive) {
-    bomb.render(bombPoint.x, bombPoint.y);
-    ++bombTimer;
-  } else {
-    //create a random point to move the donut to
-    bombPoint.randomizePoint();
-    bombTimer = 0;
-  }
+  RenderObstacle(bomb, bombPoint, bombTimer, snake);
 
   // Render snake's body
   if (snake.growing) {
@@ -272,6 +255,18 @@ void Renderer::RenderSaveScoreButton(Snake const &snake, Button &saveScoreButton
 
   if (success) {
     saveScoreTexture.render(saveScoreButtonPositionX, saveScoreButtonPositionY);
+  }
+}
+
+void Renderer::RenderObstacle(Obstacle &obstacle, RandomPoint &point, unsigned int &timer, const Snake &snake) {
+  const unsigned int timeTillReset = 600;
+  if (timer < timeTillReset && snake.alive) {
+    obstacle.render(point.x, point.y);
+    ++timer;
+  } else {
+    //create a random point to move the donut to
+    point.randomizePoint();
+    timer = 0;
   }
 }
 

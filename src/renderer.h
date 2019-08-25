@@ -8,6 +8,7 @@
 #include "SDL2/SDL_image.h"
 #include "snake.h"
 #include "Helpers.h"
+#include "obstacle.h"
 
 class Renderer {
  public:
@@ -36,6 +37,7 @@ class Renderer {
 
   void RenderRestartButton(Snake const &snake, Button &restart_button);
   void RenderSaveScoreButton(Snake const &snake, Button &saveScoreButton);
+  void RenderObstacle(Obstacle &obstacle, RandomPoint &point, unsigned int &timer, const Snake &snake);
   bool InitFont();
 };
 
