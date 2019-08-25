@@ -152,73 +152,73 @@ void Renderer::RenderUserInput(std::string text, Button &saveScoreWithCustomFile
     RenderText("The filename entered is not valid. Path should start with a '.' or a '/' and end with a '/'.", 0, 200, color);
   }
 
-    RenderText("Please enter a file path:");
+  RenderText("Please enter a file path:");
 
-    if (timer < 60) {
-      RenderText("File Path: " + text, 0, -50);
-      ++timer;
-    } else {
-      RenderText("File Path: " + text + "|", 0, -50);
-      ++timer;
-      if (timer > 90) {
-        timer = 0;
-      }
-    }
-
-    RenderButton(saveScoreWithCustomFileButton, "Save Score", 0, -100);
-
-    // Update Screen
-    SDL_RenderPresent(sdl_renderer);
-  }
-
-  void Renderer::UpdateWindowTitle(int score, int fps) {
-    std::string title{"Snake Score: " + std::to_string(score) + " FPS: " + std::to_string(fps)};
-    SDL_SetWindowTitle(sdl_window, title.c_str());
-  }
-
-  void Renderer::RenderButton(Button &button, std::string buttonText, int xPositionOffset, int yPositionOffset) {
-    //setup texture
-    Texture texture(sdl_renderer);
-    bool success = true;
-    //Render text
-    SDL_Color textColor = { 0, 0, 0 };
-    if(!texture.loadFromRenderedText( buttonText, textColor, font )) {
-        printf("Failed to render text texture!\n");
-        success = false;
-    }
-    int textureWidth  = texture.getWidth();
-    int textureHeight = texture.getHeight();
-    int buttonPositionX = (screen_width - textureWidth) / 2 - xPositionOffset;
-    int buttonPositionY = (screen_height -  textureHeight) / 2 - yPositionOffset;
-
-    button.setRelativeHeight(textureHeight, 0, true);
-    button.setRelativeWidth(textureWidth, 0, true);
-    button.position.x = buttonPositionX;
-    button.position.y = buttonPositionY;
-    SDL_SetRenderDrawColor(sdl_renderer, 0xEF, 0xF2, 0x49, 0xFF); //#EFF249
-    SDL_Rect buttonRect = button.createButtonRect();
-    SDL_RenderFillRect(sdl_renderer, &buttonRect);
-
-    if (success) {
-      texture.render(buttonPositionX, buttonPositionY);
-    }
-  }
-
-  void Renderer::RenderObstacle(Obstacle &obstacle, RandomPoint &point, unsigned int &timer, const Snake &snake) {
-    const unsigned int timeTillReset = 600;
-    if (timer < timeTillReset && snake.alive) {
-      obstacle.render(point.x, point.y);
-      ++timer;
-    } else {
-      //create a random point to move the donut to
-      point.randomizePoint();
+  if (timer < 60) {
+    RenderText("File Path: " + text, 0, -50);
+    ++timer;
+  } else {
+    RenderText("File Path: " + text + "|", 0, -50);
+    ++timer;
+    if (timer > 90) {
       timer = 0;
     }
   }
 
-  void Renderer::RenderText(std::string text, int xPositionOffset, int yPositionOffset, SDL_Color textColor) {
-    //show size
-    Texture texture(sdl_renderer);
+  RenderButton(saveScoreWithCustomFileButton, "Save Score", 0, -100);
+
+  // Update Screen
+  SDL_RenderPresent(sdl_renderer);
+}
+
+void Renderer::UpdateWindowTitle(int score, int fps) {
+  std::string title{"Snake Score: " + std::to_string(score) + " FPS: " + std::to_string(fps)};
+  SDL_SetWindowTitle(sdl_window, title.c_str());
+}
+
+void Renderer::RenderButton(Button &button, std::string buttonText, int xPositionOffset, int yPositionOffset) {
+  //setup texture
+  Texture texture(sdl_renderer);
+  bool success = true;
+  //Render text
+  SDL_Color textColor = { 0, 0, 0 };
+  if(!texture.loadFromRenderedText( buttonText, textColor, font )) {
+      printf("Failed to render text texture!\n");
+      success = false;
+  }
+  int textureWidth  = texture.getWidth();
+  int textureHeight = texture.getHeight();
+  int buttonPositionX = (screen_width - textureWidth) / 2 - xPositionOffset;
+  int buttonPositionY = (screen_height -  textureHeight) / 2 - yPositionOffset;
+
+  button.setRelativeHeight(textureHeight, 0, true);
+  button.setRelativeWidth(textureWidth, 0, true);
+  button.position.x = buttonPositionX;
+  button.position.y = buttonPositionY;
+  SDL_SetRenderDrawColor(sdl_renderer, 0xEF, 0xF2, 0x49, 0xFF); //#EFF249
+  SDL_Rect buttonRect = button.createButtonRect();
+  SDL_RenderFillRect(sdl_renderer, &buttonRect);
+
+  if (success) {
+    texture.render(buttonPositionX, buttonPositionY);
+  }
+}
+
+void Renderer::RenderObstacle(Obstacle &obstacle, RandomPoint &point, unsigned int &timer, const Snake &snake) {
+  const unsigned int timeTillReset = 600;
+  if (timer < timeTillReset && snake.alive) {
+    obstacle.render(point.x, point.y);
+    ++timer;
+  } else {
+    //create a random point to move the donut to
+    point.randomizePoint();
+    timer = 0;
+  }
+}
+
+void Renderer::RenderText(std::string text, int xPositionOffset, int yPositionOffset, SDL_Color textColor) {
+  //show size
+  Texture texture(sdl_renderer);
 
 
 
