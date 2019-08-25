@@ -3,6 +3,7 @@
 #include "SDL.h"
 #include "button.h"
 #include "Helpers.h"
+#include "obstacle.h"
 
 Game::Game(std::size_t grid_width, std::size_t grid_height, std::size_t screen_width, std::size_t screen_height)
     : snake(grid_width, grid_height),
@@ -44,54 +45,25 @@ void Game::Run(Controller const &controller, Renderer &renderer, std::size_t tar
 
     //extract this to method
     if (!snake.alive) {
-      //SDL_PumpEvents();
-      int x, y;
-      if (SDL_GetMouseState(&x, &y)) {
-        bool inside_restart = true;
-        if (x < restart_button.position.x) {
-          inside_restart = false;
-        } else if (x > restart_button.position.x + restart_button.relativeWidth) {
-          inside_restart = false;
-        } else if (y < restart_button.position.y) {
-          inside_restart = false;
-        } else if ( y > restart_button.position.y + restart_button.relativeHeight) {
-          inside_restart = false;
-        }
-
-        if (inside_restart) {
+      MouseActionButtons buttonState = controller.HandleMouseLocation(restart_button, score_button, saveScoreButton);
+      switch (buttonState) {
+        case MouseActionButtons::restart: {
           showingScore = false;
           RestartGame();
+          break;
         }
-
-        bool inside_score = true;
-        if (x < score_button.position.x) {
-          inside_score = false;
-        } else if (x > score_button.position.x + score_button.relativeWidth) {
-          inside_score = false;
-        } else if (y < score_button.position.y) {
-          inside_score = false;
-        } else if ( y > score_button.position.y + score_button.relativeHeight) {
-          inside_score = false;
-        }
-
-        if (inside_score) {
+        case MouseActionButtons::score: {
           showingScore = true;
           renderer.RenderScore(GetScore(), GetSize(), snake, restart_button, saveScoreButton);
+          break;
         }
-
-        bool save_score = true;
-        if (x < saveScoreButton.position.x) {
-          save_score = false;
-        } else if (x > saveScoreButton.position.x + saveScoreButton.relativeWidth) {
-          save_score = false;
-        } else if (y < saveScoreButton.position.y) {
-          save_score = false;
-        } else if ( y > saveScoreButton.position.y + saveScoreButton.relativeHeight) {
-          save_score = false;
-        }
-
-        if (save_score) {
+        case MouseActionButtons::save_score: {
           writeScoreFile(GetScore(), GetSize());
+          break;
+        }
+        case MouseActionButtons::none: {
+        }
+        default: {
         }
       }
     }
@@ -150,12 +122,7 @@ void Game::Update(RandomPoint &donutPoint, RandomPoint &bombPoint) {
     snake.speed += 0.02;
   }
 
-  // Check if snake eats donut
-  int donutGridPointX =  donutPoint.x / (_screen_width / _grid_width);
-  int donutGridPointY =  donutPoint.y / (_screen_height / _grid_height);
-  if ((donutGridPointX == new_x && donutGridPointY == new_y) ||
-      (donutGridPointX + 1 == new_x && donutGridPointY +1 == new_y) ||
-      (donutGridPointX - 1 == new_x && donutGridPointY - 1 == new_y)) {
+  if (Obstacle::checkCollision(donutPoint, _screen_width, _screen_height, _grid_width, _grid_height, new_x, new_y)) {
     score+= 10;
     donutPoint.randomizePoint();
     // Grow snake and increase speed.
@@ -163,12 +130,7 @@ void Game::Update(RandomPoint &donutPoint, RandomPoint &bombPoint) {
     snake.speed += 0.02;
   }
 
-  // Check if snake eats bomb
-  int bombGridPointX =  bombPoint.x / (_screen_width / _grid_width);
-  int bombGridPointY =  bombPoint.y / (_screen_height / _grid_height);
-  if ((bombGridPointX == new_x && bombGridPointY == new_y) ||
-      (bombGridPointX + 1 == new_x && bombGridPointY +1 == new_y) ||
-      (bombGridPointX - 1 == new_x && bombGridPointY - 1 == new_y)) {
+  if (Obstacle::checkCollision(bombPoint, _screen_width, _screen_height, _grid_width, _grid_height, new_x, new_y)) {
     snake.alive = false;
   }
 }

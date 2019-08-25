@@ -4,6 +4,7 @@
 #include <string>
 #include "obstacle.h"
 #include "texture.h"
+#include "Helpers.h"
 // #include <iostream>
 
 Obstacle::Obstacle(SDL_Renderer *sdl_renderer, Clip c)
@@ -114,4 +115,15 @@ bool Obstacle::loadMedia()
 	}
 
 	return success;
+}
+
+bool Obstacle::checkCollision(RandomPoint &point, int &screen_width, int &screen_height, int &grid_width, int &grid_height, int &new_x, int &new_y) {
+  int pointX =  point.x / (screen_width / grid_width);
+  int pointY =  point.y / (screen_height / grid_height);
+  if ((pointX == new_x && pointY == new_y) ||
+      (pointX + 1 == new_x && pointY +1 == new_y) ||
+      (pointX - 1 == new_x && pointY - 1 == new_y)) {
+        return true;
+  }
+  return false;
 }

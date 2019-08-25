@@ -1,10 +1,6 @@
-// credit to http://www.lazyfoo.net/tutorials/SDL/10_color_keying/index.php
-// http://www.lazyfoo.net/tutorials/SDL/16_true_type_fonts/index.php
-
 #include "SDL2/SDL.h"
 #include "texture.h"
 #include "SDL2/SDL_ttf.h"
-// #include "SDL2/SDL_image.h"
 #include <stdio.h>
 #include <string>
 

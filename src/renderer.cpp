@@ -48,6 +48,7 @@ Renderer::~Renderer() {
   sdl_window = NULL;
   sdl_renderer = NULL;
   TTF_Quit();
+  IMG_Quit();
   SDL_Quit();
 }
 

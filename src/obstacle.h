@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string>
 #include "texture.h"
+#include "Helpers.h"
 
 
 enum Clip {
@@ -25,6 +26,7 @@ class Obstacle : public Texture {
     void render(int x, int y);
 
     bool loadMedia();
+    static bool checkCollision(RandomPoint &point, int &screen_width, int &screen_height, int &grid_width, int &grid_height, int &new_x, int &new_y);
 
   private:
     SDL_Rect _spriteClip;

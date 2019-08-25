@@ -4,6 +4,13 @@
 #include <random>
 #include "snake.h"
 
+enum MouseActionButtons {
+  restart,
+  score,
+  save_score,
+  none
+};
+
 struct RandomPoint {
   public:
     RandomPoint(Snake &snake, std::size_t grid_width, std::size_t grid_height, std::size_t screen_width,
