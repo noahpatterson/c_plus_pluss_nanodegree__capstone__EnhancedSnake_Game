@@ -9,6 +9,7 @@
 #include "snake.h"
 #include "Helpers.h"
 #include "obstacle.h"
+#include <string>
 
 class Renderer {
  public:
@@ -35,9 +36,9 @@ class Renderer {
   bool TTF_isInit{false};
   bool fontInit{false};
 
-  void RenderRestartButton(Snake const &snake, Button &restart_button);
-  void RenderSaveScoreButton(Snake const &snake, Button &saveScoreButton);
+  void RenderButton(Button &button, std::string buttonText, int xPositionOffset = 0, int yPositionOffset = 0);
   void RenderObstacle(Obstacle &obstacle, RandomPoint &point, unsigned int &timer, const Snake &snake);
+  void RenderText(std::string text, int sizeOrScore, int xPositionOffset = 0, int yPositionOffset = 0);
   bool InitFont();
 };
 

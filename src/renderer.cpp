@@ -106,39 +106,14 @@ void Renderer::Render(Snake const snake, SDL_Point const &food, Button &restart_
   }
   SDL_RenderFillRect(sdl_renderer, &block);
 
-  //setup show Score button
-  //setup texture
+  //render restart and show score buttons if snake is dead.
   if (!snake.alive) {
     bool success = true;
     success = InitFont();
-    Texture showScoreTexture(sdl_renderer);
-    SDL_Color textColor = { 0, 0, 0 };
+
     if (success) {
-      //Render text
-      if(!showScoreTexture.loadFromRenderedText( "Show Score", textColor, font )) {
-          printf("Failed to render text texture!\n");
-          success = false;
-      }
-    }
-
-    int textureWidth  = showScoreTexture.getWidth();
-    int textureHeight = showScoreTexture.getHeight();
-    int scoreButtonPositionX = (screen_width - textureWidth) / 2 + 100;
-    int scoreButtonPositionY = (screen_height -  textureHeight) / 2;
-
-    score_button.setRelativeHeight(textureHeight, 0, true);
-    score_button.setRelativeWidth(textureWidth, 0, true);
-    score_button.position.x = scoreButtonPositionX;
-    score_button.position.y = scoreButtonPositionY;
-    SDL_SetRenderDrawColor(sdl_renderer, 0xEF, 0xF2, 0x49, 0xFF); //#EFF249
-    SDL_Rect scoreButton = score_button.createButtonRect();
-    SDL_RenderFillRect(sdl_renderer, &scoreButton);
-
-
-    //render text on top of button
-    if (success) {
-      RenderRestartButton(snake, restart_button);
-      showScoreTexture.render(scoreButtonPositionX, scoreButtonPositionY);
+      RenderButton(restart_button, "Restart Game", 100);
+      RenderButton(score_button, "Show Score", -100);
     }
   }
 
@@ -154,39 +129,12 @@ void Renderer::RenderScore(int score, int size, Snake const &snake, Button &rest
   //setup texture
   bool success = true;
   success = InitFont();
-  Texture scoreTexture(sdl_renderer);
-  if (success) {
-    //Render text
-    SDL_Color textColor = { 0, 0, 0 };
-    std::string _score("Score: " + std::to_string(score));
-    if(!scoreTexture.loadFromRenderedText( _score, textColor, font )) {
-        printf("Failed to render text texture!\n");
-        success = false;
-    }
-  }
-
-  int textureWidth  = scoreTexture.getWidth();
-  int textureHeight = scoreTexture.getHeight();
-
-  //show size
-  Texture sizeTexture(sdl_renderer);
-  if (success) {
-    SDL_Color textColor = { 0, 0, 0 };
-    std::string _size("Size: " + std::to_string(size));
-    if(!sizeTexture.loadFromRenderedText( _size, textColor, font )) {
-        printf("Failed to render text texture!\n");
-        success = false;
-    }
-  }
-
-  int sizeTextureWidth  = sizeTexture.getWidth();
-  int sizeTextureHeight = sizeTexture.getHeight();
 
   if (success) {
-    scoreTexture.render((screen_width - textureWidth) / 2 + 100, (screen_height -  textureHeight) / 2 - 100);
-    sizeTexture.render((screen_width - textureWidth) / 2 - 100, (screen_height -  textureHeight) / 2 - 100);
-    RenderRestartButton(snake, restart_button);
-    RenderSaveScoreButton(snake, saveScoreButton);
+    RenderText("Score: ", score, -100, 100);
+    RenderText("Size: ", size, 100, 100);
+    RenderButton(restart_button, "Restart Game", 100);
+    RenderButton(saveScoreButton, "Save Score", 100, -100);
   }
 
   // Update Screen
@@ -198,63 +146,31 @@ void Renderer::UpdateWindowTitle(int score, int fps) {
   SDL_SetWindowTitle(sdl_window, title.c_str());
 }
 
-void Renderer::RenderRestartButton(Snake const &snake, Button &restart_button) {
-  // Render restart button
-
+void Renderer::RenderButton(Button &button, std::string buttonText, int xPositionOffset, int yPositionOffset) {
   //setup texture
-  Texture restartTexture(sdl_renderer);
+  Texture texture(sdl_renderer);
   bool success = true;
   //Render text
   SDL_Color textColor = { 0, 0, 0 };
-  if(!restartTexture.loadFromRenderedText( "Restart Game", textColor, font )) {
+  if(!texture.loadFromRenderedText( buttonText, textColor, font )) {
       printf("Failed to render text texture!\n");
       success = false;
   }
-  int textureWidth  = restartTexture.getWidth();
-  int textureHeight = restartTexture.getHeight();
-  int restartButtonPositionX = (screen_width - textureWidth) / 2 - 100;
-  int restartButtonPositionY = (screen_height -  textureHeight) / 2;
+  int textureWidth  = texture.getWidth();
+  int textureHeight = texture.getHeight();
+  int buttonPositionX = (screen_width - textureWidth) / 2 - xPositionOffset;
+  int buttonPositionY = (screen_height -  textureHeight) / 2 - yPositionOffset;
 
-  restart_button.setRelativeHeight(textureHeight, 0, true);
-  restart_button.setRelativeWidth(textureWidth, 0, true);
-  restart_button.position.x = restartButtonPositionX;
-  restart_button.position.y = restartButtonPositionY;
+  button.setRelativeHeight(textureHeight, 0, true);
+  button.setRelativeWidth(textureWidth, 0, true);
+  button.position.x = buttonPositionX;
+  button.position.y = buttonPositionY;
   SDL_SetRenderDrawColor(sdl_renderer, 0xEF, 0xF2, 0x49, 0xFF); //#EFF249
-  SDL_Rect restartButton = restart_button.createButtonRect();
-  SDL_RenderFillRect(sdl_renderer, &restartButton);
+  SDL_Rect buttonRect = button.createButtonRect();
+  SDL_RenderFillRect(sdl_renderer, &buttonRect);
 
   if (success) {
-    restartTexture.render(restartButtonPositionX, restartButtonPositionY);
-  }
-}
-
-void Renderer::RenderSaveScoreButton(Snake const &snake, Button &saveScoreButton) {
-  // Render restart button
-
-  //setup texture
-  Texture saveScoreTexture(sdl_renderer);
-  bool success = true;
-  //Render text
-  SDL_Color textColor = { 0, 0, 0 };
-  if(!saveScoreTexture.loadFromRenderedText( "Save Score", textColor, font )) {
-      printf("Failed to render text texture!\n");
-      success = false;
-  }
-  int textureWidth  = saveScoreTexture.getWidth();
-  int textureHeight = saveScoreTexture.getHeight();
-  int saveScoreButtonPositionX = (screen_width - textureWidth) / 2 - 100;
-  int saveScoreButtonPositionY = (screen_height -  textureHeight) / 2 + 100;
-
-  saveScoreButton.setRelativeHeight(textureHeight, 0, true);
-  saveScoreButton.setRelativeWidth(textureWidth, 0, true);
-  saveScoreButton.position.x = saveScoreButtonPositionX;
-  saveScoreButton.position.y = saveScoreButtonPositionY;
-  SDL_SetRenderDrawColor(sdl_renderer, 0xEF, 0xF2, 0x49, 0xFF); //#EFF249
-  SDL_Rect saveScoreButtonRect = saveScoreButton.createButtonRect();
-  SDL_RenderFillRect(sdl_renderer, &saveScoreButtonRect);
-
-  if (success) {
-    saveScoreTexture.render(saveScoreButtonPositionX, saveScoreButtonPositionY);
+    texture.render(buttonPositionX, buttonPositionY);
   }
 }
 
@@ -267,6 +183,25 @@ void Renderer::RenderObstacle(Obstacle &obstacle, RandomPoint &point, unsigned i
     //create a random point to move the donut to
     point.randomizePoint();
     timer = 0;
+  }
+}
+
+void Renderer::RenderText(std::string text, int sizeOrScore, int xPositionOffset, int yPositionOffset) {
+  //show size
+  Texture texture(sdl_renderer);
+  SDL_Color textColor = { 0, 0, 0 };
+  bool success = true;
+  std::string _size(text + std::to_string(sizeOrScore));
+  if(!texture.loadFromRenderedText( _size, textColor, font )) {
+      printf("Failed to render text texture!\n");
+      success = false;
+  }
+
+  int textureWidth  = texture.getWidth();
+  int textureHeight = texture.getHeight();
+
+  if (success) {
+    texture.render((screen_width - textureWidth) / 2 - xPositionOffset, (screen_height -  textureHeight) / 2 - yPositionOffset);
   }
 }
 
