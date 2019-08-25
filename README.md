@@ -22,35 +22,41 @@ The new version utilizes new classes to help organize the game. The enhanced ver
 
 ## Rubric Points Met
 
-* **Loops, Functions, I/O** *A variety of control structures are used in the project* - The program utilizes switches and while loops. /File: `game.cpp` line: 56/,  /File: `obstacle.cpp` line: 96/
-* **Loops, Functions, I/O** *The project code is clearly organized into functions.* - Care was taken to make sure that large files like `renderer.cpp` were broken into smaller, more reusable functions. /File: `renderer.cpp` line: 179/,  /File: `renderer.cpp` line: 207/, /File: `renderer.cpp` line: 219/
-* **Loops, Functions, I/O** *The project reads data from an external file or writes data to a file as part of the necessary operation of the program.* - The program uses `<fstream>` to write scores to a file. It reads in image files with SDL_Image. It also reads in a font file with SDL_ttf. /File: `Helpers.cpp` line: 51/,  /File: `obstacle.cpp` line: 89/
-* **Loops, Functions, I/O** *The project accepts input from a user as part of the necessary operation of the program.* - The program takes user input from mouseclicks and keyboard events. Mouseclicks allow buttons to be tapped. Keyboard events allow for adding the users own file path. /File: `controller.cpp` line: 47/,  /File: `controller.cpp` line: 68/
-* **Object Oriented Programming** *The project code is organized into classes with class attributes to hold the data, and class methods to perform tasks.* - The program is split up into a number of new classes. Classes like Texture and it's Inheritor - Obstacle - allow for logic to be encapsulated and reused. The program also has a struct - RandomPoint - that encapsulates logic but didn't need to be a full blown class. The program uses Enums as well. /File: `texture.cpp` line: 1/, /File: `obstacle.cpp` line: 1/, /File: `button.cpp` line: 1/, /File: `Helpers.cpp` line: 9/, /File: `Helpers.h` line: 8/
+* **Loops, Functions, I/O** *-A variety of control structures are used in the project-*
+  - The program utilizes switches and while loops. /File: `game.cpp` line: 56/,  /File: `obstacle.cpp` line: 96/
+* **Loops, Functions, I/O** *-The project code is clearly organized into functions.-*
+  - Care was taken to make sure that large files like `renderer.cpp` were broken into smaller, more reusable functions. /File: `renderer.cpp` line: 179/,  /File: `renderer.cpp` line: 207/, /File: `renderer.cpp` line: 219/
+* **Loops, Functions, I/O** *-The project reads data from an external file or writes data to a file as part of the necessary operation of the program.-*
+  - The program uses `<fstream>` to write scores to a file. It reads in image files with SDL_Image. It also reads in a font file with SDL_ttf. /File: `Helpers.cpp` line: 51/,  /File: `obstacle.cpp` line: 89/
+* **Loops, Functions, I/O** *-The project accepts input from a user as part of the necessary operation of the program.-*
+  - The program takes user input from mouseclicks and keyboard events. Mouseclicks allow buttons to be tapped. Keyboard events allow for adding the users own file path. /File: `controller.cpp` line: 47/,  /File: `controller.cpp` line: 68/
+* **Object Oriented Programming** *-The project code is organized into classes with class attributes to hold the data, and class methods to perform tasks.-*
+  - The program is split up into a number of new classes. Classes like Texture and it's Inheritor - Obstacle - allow for logic to be encapsulated and reused. The program also has a struct - RandomPoint - that encapsulates logic but didn't need to be a full blown class. The program uses Enums as well. /File: `texture.cpp` line: 1/, /File: `obstacle.cpp` line: 1/, /File: `button.cpp` line: 1/, /File: `Helpers.cpp` line: 9/, /File: `Helpers.h` line: 8/
 
 
 ## Class and Program Structure
 
 ### Class and file descriptions
--- **main.cpp** - This starts the entire program and setups of the environment.
+- **main.cpp** - This starts the entire program and setups of the environment.
 
--- **controller.cpp** - This handles user input and user interaction with the game. Through SDL it continuously polls for user input events.
+- **controller.cpp** - This handles user input and user interaction with the game. Through SDL it continuously polls for user input events.
 
--- **game.cpp** - This is the heart of the programs logic. It handles the games state as well as sending commands to the SDL_Renderer.
+- **game.cpp** - This is the heart of the programs logic. It handles the games state as well as sending commands to the SDL_Renderer.
 
--- **renderer.cpp** - This is the major class that setups how objects are rendered to the screen.
+- **renderer.cpp** - This is the major class that setups how objects are rendered to the screen.
 
--- **texture.cpp** - This is the base class for rendered textures and is used for rendering obstacles and text to the screen.
+- **texture.cpp** - This is the base class for rendered textures and is used for rendering obstacles and text to the screen.
 
-  -- **obstacle.cpp** - This inherits functionality from Texture and expands on the specifics of how obstacles are loaded and rendered. It also has a static function to help check for collisions of game objects.
+- **obstacle.cpp** - This inherits functionality from Texture and expands on the specifics of how obstacles are loaded and rendered. It also has a static function to help check for collisions of game objects.
 
--- **button.cpp** - This is a simple class that encapsulates data for the game interactive buttons.
+- **button.cpp** - This is a simple class that encapsulates data for the game interactive buttons.
 
--- **snake.cpp** - This is the class that encapsulates the behavior and data for the Snake.
+- **snake.cpp** - This is the class that encapsulates the behavior and data for the Snake.
 
--- **Helpers.cpp** - This is a Helper file that contains the RandomPoint struct, writeScoreFile function and MouseActionButtons enum.
+- **Helpers.cpp** - This is a Helper file that contains the RandomPoint struct, writeScoreFile function and MouseActionButtons enum.
 
 ### General flow and structure
+```
 -- **main.cpp**
 
     -- **controller.cpp**
@@ -68,6 +74,7 @@ The new version utilizes new classes to help organize the game. The enhanced ver
                 -- **obstacle.cpp**
 
         -- **Helpers.cpp**
+```
 
 ## Dependencies for Running Locally
 * cmake >= 3.7
