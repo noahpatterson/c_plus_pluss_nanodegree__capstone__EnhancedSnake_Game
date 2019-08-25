@@ -150,7 +150,7 @@ void Renderer::RenderUserInput(std::string text, Button &saveScoreWithCustomFile
   if (errorInFile) {
     SDL_Color color = {237, 27, 12};
     RenderText("The filename entered is not valid. Path should start with a '.' or a '/' and end with a '/'.", 0, 200, color);
-    }
+  }
 
     RenderText("Please enter a file path:");
 
