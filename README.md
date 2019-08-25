@@ -2,10 +2,10 @@
 
 This is an Enhanced version of the starter Snake Game supplied by [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). The udacity project was inspired by [this](https://codereview.stackexchange.com/questions/212296/snake-game-in-c-with-sdl) excellent StackOverflow post and set of responses.
 
-<img src="snakegame1.png" width="200" height="200" />
-<img src="snakegame2.png" width="200" height="200" />
-<img src="snakegame3.png" width="200" height="200" />
-<img src="snakegame4.png" width="200" height="200" />
+<img src="snakegame1.png" width="300" height="300" />
+<img src="snakegame2.png" width="300" height="300" />
+<img src="snakegame3.png" width="300" height="300" />
+<img src="snakegame4.png" width="300" height="300" />
 
 ## Description
 
